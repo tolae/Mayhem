@@ -1,0 +1,12 @@
+#Enemy Name
+enemy_xxxx
+#Enemy velocity
+5
+#Enemy health
+100
+#Enemy boss
+true
+#Enemy Density
+1
+#Enemy Restitution (bounciness)
+0.6

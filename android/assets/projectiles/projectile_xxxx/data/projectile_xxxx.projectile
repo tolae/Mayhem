@@ -1,0 +1,10 @@
+#Projectile Name
+projectile_xxxx
+#Projectile velocity
+20
+#Projectile bounces
+3
+#Projectile Density
+1
+#Projectile Restitution (bounciness)
+0
