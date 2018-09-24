@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
+import com.spitfire.game.misc.BodyEditorLoader;
 
 /**
  * Holds all the information for a projectile. This is unique to the instance of the object and will
@@ -17,6 +18,7 @@ public class ProjectileDef {
     protected final int max_bounces; //The total amount of bounces the projectile has in its life time.
     protected final BodyDef body_def; //The internal information for a Box2D body.
     protected final FixtureDef fixture_def; //The internal information for a Box2D fixture.
+    protected final BodyEditorLoader loader; //The loader for this projectile
 
     protected Vector2 current_velocity; //The initial velocity of the projectile
     protected int current_bounces; //The initial bounce count of the projectile
@@ -32,7 +34,7 @@ public class ProjectileDef {
      * @param bd body_def: The internal information for a Box2D body
      * @param fd fixture_def: The internal information for a Box2D fixture
      */
-    public ProjectileDef(String n, int mv, Vector2 cv, int mb, int cb, BodyDef bd, FixtureDef fd) {
+    public ProjectileDef(String n, int mv, Vector2 cv, int mb, int cb, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
         name = n;
         max_velocity = mv;
         current_velocity = cv;
@@ -40,6 +42,7 @@ public class ProjectileDef {
         current_bounces = cb;
         body_def = bd;
         fixture_def = fd;
+        loader = bel;
     }
 
     /**
@@ -48,14 +51,14 @@ public class ProjectileDef {
      */
     public ProjectileDef(ProjectileDef pd) {
         this(pd.name, pd.max_velocity, pd.current_velocity,
-                pd.max_bounces, pd.current_bounces, pd.body_def, pd.fixture_def);
+                pd.max_bounces, pd.current_bounces, pd.body_def, pd.fixture_def, pd.loader);
     }
 
     /**
      * Constructor with zero'd initials. Requires a name.
      */
-    public ProjectileDef(String n, int mv, int mb, BodyDef bd, FixtureDef fd) {
-        this(n, mv, new Vector2(0,0), mb, 0, bd, fd);
+    public ProjectileDef(String n, int mv, int mb, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
+        this(n, mv, new Vector2(0,0), mb, 0, bd, fd, bel);
     }
 
     //-----Methods

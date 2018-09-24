@@ -1,6 +1,7 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
@@ -26,7 +27,7 @@ public class Projectile extends Entity {
             projectile_def.name, TextureAtlas.class);
         //Create and save body
         body = w.world.createBody(projectile_def.body_def);
-        body.createFixture(projectile_def.fixture_def);
+        projectile_def.loader.attachFixture(body, projectile_def.name, projectile_def.fixture_def, 0.25f);
         body.setUserData(this);
         //Create and save fixture
         fixture = body.createFixture(projectile_def.fixture_def);

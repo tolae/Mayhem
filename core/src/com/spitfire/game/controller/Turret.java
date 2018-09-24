@@ -1,9 +1,7 @@
 package com.spitfire.game.controller;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.*;
 import com.spitfire.game.model.MyWorld;
 import com.spitfire.game.model.ProjectileDef;
 
@@ -14,8 +12,6 @@ import com.spitfire.game.model.ProjectileDef;
 public class Turret {
 
     //-----Fields
-    private static final int TURRET_WIDTH = 50; //To be removed
-    private static final int TURRET_HEIGHT = 50; //To be removed
     private static final float TURRET_RADIUS = 64; //The radius of the base of the turret
     //How far a projectile can be pulled to reach maximum velocity
     private static final float MAXIMUM_PULL_DISTANCE = TURRET_RADIUS * 1.5f;
@@ -23,53 +19,82 @@ public class Turret {
     private static final float MAXIMUM_PULL_DISTANCE2 = MAXIMUM_PULL_DISTANCE*MAXIMUM_PULL_DISTANCE;
 
     private ProjectileDef descriptor; //Contains the name of the projectile to fire
-    public Rectangle touchable; //The physical part that registers if the turret is touched or not
+    public Circle touchable; //The physical part that registers if the turret is touched or not
+    public Circle bounds; //Bounds for how far the projectile can be pulled
+    private Vector2 point; //The point where the user drags the projectile to shoot
+    private Vector2 point_percent;
+    public final TurretStyle turret_style; //The TextureRegion representing the turret
+    public boolean touched;
     //-----Constructors
-
     /**
      * Default constructor.
      * @param x the x position
      * @param y the y position
-     * @param pd ProjectileDef: The projectile descriptor this turret fires
+     * @param projectile_def: The projectile descriptor this turret fires
      */
-    public Turret(float x, float y, ProjectileDef pd) {
-        touchable = new Rectangle(x, y, TURRET_WIDTH, TURRET_HEIGHT);
-        descriptor = pd;
+    public Turret(float x, float y, ProjectileDef projectile_def, final TurretStyle style) {
+        touchable = new Circle(x, y, TURRET_RADIUS);
+        bounds = new Circle(x, y, MAXIMUM_PULL_DISTANCE);
+        descriptor = projectile_def;
+        point = new Vector2(x,y);
+        point_percent = new Vector2();
+        turret_style = style;
+        touched = false;
     }
 
     //-----Methods
     /**
-     * Details whether this turret should begin firing or not.
-     * @param tp TouchPoint: The user touch location
-     * @return true if tp lies within the turret's base, false otherwise
-     */
-    public boolean start(Vector3 tp) {
-        if (!touchable.contains(tp.x, tp.y)) return false;
-
-        return true;
-    }
-
-    /**
      * Returns the initial descriptor of the projectile. The current velocity is the magnitude,
      * which is a percentage of the maximum velocty.
      * @param tp TouchPoint: The end touch point
-     * @return the initial descriptor of the projectile for the world to create
      */
     public void fire(Vector3 tp, final MyWorld w) {
         Vector2 end_loci = new Vector2(tp.x, tp.y);
-        Vector2 start_loci = new Vector2();
+        Vector2 start_loci = new Vector2(touchable.x, touchable.y);
 
         float magnitude = MathUtils.clamp(
-                end_loci.dst2(touchable.getCenter(start_loci))/MAXIMUM_PULL_DISTANCE2,
+                end_loci.dst2(start_loci)/MAXIMUM_PULL_DISTANCE2,
                 0.25f,
                 1f);
 
         descriptor.setCurrentVelocity(
                 end_loci.sub(start_loci).nor().scl(-1f * magnitude * descriptor.getMaxVelocity()));
 
+        descriptor.getBodyDef().position.set(
+                touchable.x - turret_style.turret_base.getRegionWidth()/2f,
+                touchable.y - turret_style.turret_base.getRegionHeight()/2f);
+
         w.createProjectile(descriptor);
     }
-
     //-----Getters and Setters
+    public float getPointX() {
+        return point.x;
+    }
 
+    public float getPointY() {
+        return point.y;
+    }
+
+    public void setPointPosition(float x, float y) {
+        point.set(x, y);
+        point_percent.set((x - touchable.x) / bounds.radius, (y - touchable.y) / bounds.radius);
+
+        float length = point_percent.len();
+        if (length > 1) point_percent.scl(1f / length);
+
+        if (!bounds.contains(x, y)) {
+            point.set(point_percent).nor().scl(bounds.radius).add(bounds.x, bounds.y);
+        }
+    }
+
+    //------Inner/Anonymous Classes
+    public static class TurretStyle {
+        public TextureRegion turret_base;
+        public TextureRegion turret_projectile;
+
+        public TurretStyle(TextureRegion base, TextureRegion projectile) {
+            turret_base = base;
+            turret_projectile = projectile;
+        }
+    }
 }

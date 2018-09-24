@@ -1,5 +1,6 @@
 package com.spitfire.game.controller;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
+import com.spitfire.game.misc.BodyEditorLoader;
 import com.spitfire.game.model.ProjectileDef;
 import com.spitfire.game.controller.EnumManager.EntityType;
 
@@ -101,11 +103,12 @@ public class ProjectileLoader extends
     			line_count++;
     		}
 
+    		BodyEditorLoader bel = new BodyEditorLoader(Gdx.files.internal(file.pathWithoutExtension().concat(".json")));
     		bd.type = BodyDef.BodyType.DynamicBody;
     		fd.friction = FRICTION;
     		fd.filter.categoryBits = CATE_BITS;
     		fd.filter.maskBits = MASK_BITS;
-    		pd = new ProjectileDef(n, v, b, bd, fd);
+    		pd = new ProjectileDef(n, v, b, bd, fd, bel);
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

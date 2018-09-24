@@ -80,6 +80,7 @@ public class ResourceManager {
     private void loadResourcesInDirectory(String path) {
         FileHandle[] file_list = Gdx.files.internal(path).list();
     	for(FileHandle file : file_list) {
+    	    String s = file.path();
     		if (file.isDirectory())
     			loadResourcesInDirectory(file.path());
 

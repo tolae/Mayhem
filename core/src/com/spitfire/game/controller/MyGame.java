@@ -2,16 +2,12 @@ package com.spitfire.game.controller;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.spitfire.game.model.MyWorld;
-import com.spitfire.game.model.ProjectileDef;
-import com.spitfire.game.view.GameScreen;
 import com.spitfire.game.view.LoadingScreen;
 import com.spitfire.game.view.ResourceManager;
 
@@ -20,7 +16,7 @@ import com.spitfire.game.view.ResourceManager;
  * communicates between both the view(Resource Controller) and the model(World). The main loop
  * is contained in this class (render method).
  */
-public class MyGame extends Game implements InputProcessor {
+public class MyGame extends Game {
 
     //-----Fields
     /*Camera Statics*/
@@ -31,8 +27,8 @@ public class MyGame extends Game implements InputProcessor {
     public ResourceManager resource_manager; //The main container for all view related processes
     public Camera camera; //The camera in which the player can see
     public SpriteBatch batch; //The main drawing mechanism
-    public Vector3 tp; //Touch point of the user
 
+    public Stage stage; //Stage for actors and the HUD
     //-----Constructors
     //-----Methods
     @Override
@@ -53,10 +49,9 @@ public class MyGame extends Game implements InputProcessor {
         world.init();
 
         batch = new SpriteBatch();
-        tp = new Vector3();
+        stage = new Stage(new ScreenViewport(), batch);
 
         this.setScreen(new LoadingScreen(this));
-        Gdx.input.setInputProcessor(this);
     }
 
     @Override
@@ -83,54 +78,5 @@ public class MyGame extends Game implements InputProcessor {
     public void resize(int width, int height) {
         super.resize(width, height);
     }
-
-    /*Input Processing Methods*/
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if (button != Input.Buttons.LEFT || pointer > 0) return false;
-        camera.unproject(tp.set(screenX, screenY, 0));
-
-        return true;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (button != Input.Buttons.LEFT || pointer > 0) return false;
-        camera.unproject(tp.set(screenX, screenY, 0));
-
-        return true;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
-
     //-----Getters and Setters
 }
