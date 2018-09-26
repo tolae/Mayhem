@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.spitfire.game.controller.Level;
 import com.spitfire.game.controller.MyGame;
 import com.spitfire.game.controller.Turret;
 import com.spitfire.game.model.Entity;
@@ -18,27 +19,31 @@ public class GameScreen implements Screen, InputProcessor {
     //-----Fields
     private final MyGame game;
 
-    private TextureRegion base;
     private TextureRegion background;
     private Turret turret;
 
     private Vector3 tp;
     //-----Constructors
-    public GameScreen(final MyGame g) {
+    GameScreen(final MyGame g) {
         game = g;
 
-        base = g.resource_manager.getTextureRegion("base");
         background = g.resource_manager.getTextureRegion("back");
 
         turret = new Turret(
                 game.camera.viewportWidth/20f,
                 game.camera.viewportHeight/2f,
-                game.resource_manager.getAsset("projectile_xxxx", ProjectileDef.class),
+                game.resource_manager.getAsset(
+                        "projectile_xxxx", ProjectileDef.class),
                 new Turret.TurretStyle(
-                        base,
-                game.resource_manager.getAsset("projectile_xxxx", TextureAtlas.class).findRegion("0")));
+                        game.resource_manager.getTextureRegion("base"),
+                        game.resource_manager.getAsset(
+                            "projectile_xxxx",
+                            TextureAtlas.class).findRegion("0")));
 
         tp = new Vector3();
+
+        game.setWorldLevel(
+                game.resource_manager.getAsset("level_xxxx", Level.class));
 
         Gdx.input.setInputProcessor(this);
     }

@@ -1,13 +1,17 @@
 package com.spitfire.game.controller;
 
 import com.spitfire.game.controller.EnumManager.FormationStyle;
+import com.spitfire.game.model.Position;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Formation {
 
     //-----Fields
-    protected EnumManager.FormationStyle formation_style; //How the units are organized
-    protected int size; //How many units are in the formation
-    protected String[] names; //Names of the enemies in said formation
+    private FormationStyle formation_style; //How the units are organized
+    private final int size; //How many units are in the formation
+    private final String[] names; //Names of the enemies in said formation
 
     //-----Constructors
     public Formation(int formation_count) {
@@ -16,13 +20,30 @@ public class Formation {
         formation_style = FormationStyle.NONE;
     }
     //-----Methods
-    //-----Getters and Setters
+    public List<Position> createFormation() {
+        List<Position> positions = new ArrayList<Position>();
+        if (formation_style == FormationStyle.NONE) return positions;
 
-    protected EnumManager.FormationStyle getFormationStyle() {
-        return formation_style;
+        switch (formation_style) {
+            case LINE_1:
+                int current_size = 0;
+                for (int y_counter = 0; y_counter < size; y_counter++) {
+                    if (current_size > names.length) {
+                        current_size = 0;
+                    }
+                    positions.add(new Position(
+                            names[current_size],
+                            0,
+                            y_counter));
+                    current_size++;
+                }
+                break;
+        }
+
+        return positions;
     }
-
-    protected void setFormationStyle(EnumManager.FormationStyle formation_style) {
+    //-----Getters and Setters
+    void setFormationStyle(EnumManager.FormationStyle formation_style) {
         this.formation_style = formation_style;
     }
 
@@ -30,15 +51,7 @@ public class Formation {
         return size;
     }
 
-    protected void setSize(int size) {
-        this.size = size;
-    }
-
-    protected String getName(int index) {
-        return names[index];
-    }
-
-    protected void setName(String name, int index) {
+    void setName(String name, int index) {
         this.names[index] = name;
     }
 }

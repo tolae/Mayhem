@@ -29,6 +29,8 @@ public class MyGame extends Game {
     public SpriteBatch batch; //The main drawing mechanism
 
     public Stage stage; //Stage for actors and the HUD
+
+    public Level current_level; //The current level the game is on
     //-----Constructors
     //-----Methods
     @Override
@@ -77,6 +79,11 @@ public class MyGame extends Game {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
+    }
+
+    public void setWorldLevel(Level level) {
+        current_level = level;
+        world.populate(level);
     }
     //-----Getters and Setters
 }

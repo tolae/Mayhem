@@ -10,12 +10,14 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class EnemyDef {
 
     //-----Fields
-    protected String name; //The name of the enemy
-    protected int max_velocity; //The top velocity a enemy to get to
-    protected int health; //The total amount of damage the enemy can take before death
-    protected boolean isBoss; //Determines if this enemy is a boss or not
-    protected BodyDef body_def; //The internal information for a Box2D body
-    protected FixtureDef fixture_def; //The internal information for a Box2D fixture
+    final protected String name; //The name of the enemy
+    final private int max_velocity; //The top velocity a enemy to get to
+    final private int health; //The total amount of damage the enemy can take before death
+    final private boolean isBoss; //Determines if this enemy is a boss or not
+    final BodyDef body_def; //The internal information for a Box2D body
+    final FixtureDef fixture_def; //The internal information for a Box2D fixture
+
+    int width, height; //Width and height of the enemy from within the texture
 
     //-----Constructors
 

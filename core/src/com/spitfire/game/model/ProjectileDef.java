@@ -14,14 +14,16 @@ public class ProjectileDef {
 
     //-----Fields
     protected final String name; //The name of the projectile
-    protected final int max_velocity; //The top velocity a projectile to get to.
-    protected final int max_bounces; //The total amount of bounces the projectile has in its life time.
-    protected final BodyDef body_def; //The internal information for a Box2D body.
-    protected final FixtureDef fixture_def; //The internal information for a Box2D fixture.
-    protected final BodyEditorLoader loader; //The loader for this projectile
+    private final int max_velocity; //The top velocity a projectile to get to.
+    private final int max_bounces; //The total amount of bounces the projectile has in its life time.
+    final BodyDef body_def; //The internal information for a Box2D body.
+    final FixtureDef fixture_def; //The internal information for a Box2D fixture.
+    final BodyEditorLoader loader; //The loader for this projectile
 
-    protected Vector2 current_velocity; //The initial velocity of the projectile
-    protected int current_bounces; //The initial bounce count of the projectile
+    Vector2 current_velocity; //The initial velocity of the projectile
+    private int current_bounces; //The initial bounce count of the projectile
+
+    int width, height; //The projectiles texture width and height
 
     //-----Constructors
     /**

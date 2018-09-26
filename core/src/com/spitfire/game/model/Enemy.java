@@ -21,12 +21,14 @@ public class Enemy extends Entity {
      * @param ed enemy_def: Definition of the enemy
      * @param w world: The world in which the enemy exists
      */
-    public void init(EnemyDef ed, MyWorld w) {
+    void init(EnemyDef ed, MyWorld w) {
         //Save a copy of the enemy definition
         enemy_def = new EnemyDef(ed);
         //Grab the texture region associated
         texture_atlas = w.game.resource_manager.getAsset(
             enemy_def.name, TextureAtlas.class);
+        enemy_def.width = texture_atlas.getRegions().get(0).originalWidth;
+        enemy_def.height = texture_atlas.getRegions().get(0).originalHeight;
         //Create and save the enemy body
         body = w.world.createBody(enemy_def.body_def);
         fixture = body.createFixture(enemy_def.fixture_def);

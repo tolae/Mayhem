@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Pool;
+import com.spitfire.game.controller.Formation;
 import com.spitfire.game.controller.Level;
 import com.spitfire.game.controller.MyGame;
 
@@ -29,8 +30,7 @@ public class MyWorld {
     private List<Projectile> active_projectiles = null; //Projectiles that are currently being used
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
-    private com.spitfire.game.controller.Level current_level = null; //The current level that is being done
-    protected World world = null; //The physical world all the object bodies exist on
+    World world = null; //The physical world all the object bodies exist on
 
     private static final Vector2 GRAVITY = new Vector2(0,0); //The gravity of the world
 
@@ -86,18 +86,29 @@ public class MyWorld {
             active_enemies.clear();
         else
             active_enemies = new ArrayList<Enemy>();
-
-        Body b = world.createBody(new BodyDef());
     }
 
     /**
      * Populates the current world based on the current level.
-     * @param nl New_Level: to generate and populate the world.
+     * @param level: to generate and populate the world.
      */
-    public void populate(Level nl) {
+    public void populate(Level level) {
+        Formation formation = level.getFormation();
 
+        for (Position p: formation.createFormation()) {
+            EnemyDef enemy_def = game.resource_manager.getAsset(
+                    p.name,
+                    EnemyDef.class);
+
+            float width = enemy_def.width;
+            float height = enemy_def.height;
+
+            enemy_def.body_def.position.set(p.x_pos * width, p.y_pos * height);
+            createEnemy(enemy_def);
+        }
     }
 
+    //TODO move enemies forward
     public void step() {
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }

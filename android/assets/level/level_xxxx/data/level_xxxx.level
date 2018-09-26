@@ -18,3 +18,35 @@ blah
 end
 #Wave 1 end
 end
+#Wave 2 start
+start
+#Formation count
+1
+#Formation 1 start
+start
+#Number of enemies in formation
+5
+#Formation Style
+line_1
+#Name/enemy identifier
+blah
+#Formation 1 end
+end
+#Wave 2 end
+end
+#Wave 3 start
+start
+#Formation count
+1
+#Formation 1 start
+start
+#Number of enemies in formation
+5
+#Formation Style
+line_1
+#Name/enemy identifier
+blah
+#Formation 1 end
+end
+#Wave 3 end
+end

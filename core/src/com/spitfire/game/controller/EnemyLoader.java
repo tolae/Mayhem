@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 public class EnemyLoader extends AsynchronousAssetLoader<EnemyDef, EnemyLoader.EnemyParameters> {
 
     //-----Fields
-    private static final String ENEMY_ASSET_PATH = "android/assets/data/enemies/";
     /*File parsing line constants*/
     private static final int ENEMY_NAME = 0;
     private static final int ENEMY_VELOCITY = 1;
@@ -33,7 +32,7 @@ public class EnemyLoader extends AsynchronousAssetLoader<EnemyDef, EnemyLoader.E
     //Box2D object friction
     private static final float FRICTION = 0;
     /*Actual EnemyDef to save*/
-    EnemyDef enemy_def;
+    private EnemyDef enemy_def; //TODO Add body stuff here :D
     //-----Constructors
     public EnemyLoader(FileHandleResolver resolver) {
         super(resolver);
