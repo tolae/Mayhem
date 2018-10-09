@@ -96,15 +96,14 @@ public class MyWorld {
         Formation formation = level.getFormation();
 
         for (Position p: formation.createFormation()) {
-            EnemyDef enemy_def = game.resource_manager.getAsset(
+            EnemyDef enemy_def;
+            if ((enemy_def = game.resource_manager.getAsset(
                     p.name,
-                    EnemyDef.class);
-
-            float width = enemy_def.width;
-            float height = enemy_def.height;
-
-            enemy_def.body_def.position.set(p.x_pos * width, p.y_pos * height);
-            createEnemy(enemy_def);
+                    EnemyDef.class)) != null) {
+                enemy_def.width = p.x_pos;
+                enemy_def.height = p.y_pos;
+                createEnemy(enemy_def);
+            }
         }
     }
 
@@ -117,26 +116,22 @@ public class MyWorld {
      * Adds a new projectile to the world based off the given projectile definition. This is obtained
      * from the projectile pool to be later freed.
      * @param pd ProjectileDef: The descriptor for the projectile to be created.
-     * @return true if a new projectile is successfully made, false otherwise
      */
-    public boolean createProjectile(ProjectileDef pd) {
+    public void createProjectile(ProjectileDef pd) {
         Projectile newProjectile = projectile_pool.obtain();
         newProjectile.init(pd, this);
         active_projectiles.add(newProjectile);
-        return true;
     }
 
     /**
      * Adds a new enemy to the world based off the given enemy definition. This is obtained from
      * the enemy pool to be later freed.
      * @param ed EnemyDef: The descriptor for the enemy to be created.
-     * @return true if a new enemy is successfully made, false otherwise
      */
-    public boolean createEnemy(EnemyDef ed) {
+    private void createEnemy(EnemyDef ed) {
         Enemy newEnemy = enemy_pool.obtain();
         newEnemy.init(ed, this);
         active_enemies.add(newEnemy);
-        return true;
     }
 
     /**

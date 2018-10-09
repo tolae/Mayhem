@@ -20,6 +20,11 @@ public class Formation {
         formation_style = FormationStyle.NONE;
     }
     //-----Methods
+
+    /**
+     * Creates a formation based on the formations information.
+     * @return a list of units in their relative positions
+     */
     public List<Position> createFormation() {
         List<Position> positions = new ArrayList<Position>();
         if (formation_style == FormationStyle.NONE) return positions;
@@ -28,14 +33,17 @@ public class Formation {
             case LINE_1:
                 int current_size = 0;
                 for (int y_counter = 0; y_counter < size; y_counter++) {
-                    if (current_size > names.length) {
+                    //Ensure the current name doesn't go over the name length
+                    if (current_size > names.length)
                         current_size = 0;
+                    //Ensure there is a name to add to the position
+                    if (names[current_size] != null) {
+                        positions.add(new Position(
+                                names[current_size],
+                                0,
+                                y_counter));
+                        current_size++;
                     }
-                    positions.add(new Position(
-                            names[current_size],
-                            0,
-                            y_counter));
-                    current_size++;
                 }
                 break;
         }

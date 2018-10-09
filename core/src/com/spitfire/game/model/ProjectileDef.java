@@ -54,6 +54,9 @@ public class ProjectileDef {
     public ProjectileDef(ProjectileDef pd) {
         this(pd.name, pd.max_velocity, pd.current_velocity,
                 pd.max_bounces, pd.current_bounces, pd.body_def, pd.fixture_def, pd.loader);
+
+        this.width = pd.width;
+        this.height = pd.height;
     }
 
     /**

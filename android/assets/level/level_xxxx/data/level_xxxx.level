@@ -13,7 +13,7 @@ start
 #Formation Style
 line_1
 #Name/enemy identifier
-blah
+enemy_xxxx
 #Formation 1 end
 end
 #Wave 1 end
@@ -29,7 +29,7 @@ start
 #Formation Style
 line_1
 #Name/enemy identifier
-blah
+enemy_xxxx
 #Formation 1 end
 end
 #Wave 2 end
@@ -45,7 +45,7 @@ start
 #Formation Style
 line_1
 #Name/enemy identifier
-blah
+enemy_xxxx
 #Formation 1 end
 end
 #Wave 3 end

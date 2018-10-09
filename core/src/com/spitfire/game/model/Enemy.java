@@ -27,12 +27,20 @@ public class Enemy extends Entity {
         //Grab the texture region associated
         texture_atlas = w.game.resource_manager.getAsset(
             enemy_def.name, TextureAtlas.class);
-        enemy_def.width = texture_atlas.getRegions().get(0).originalWidth;
-        enemy_def.height = texture_atlas.getRegions().get(0).originalHeight;
+        int width = texture_atlas.getRegions().get(0).originalWidth;
+        int height = texture_atlas.getRegions().get(0).originalHeight;
         //Create and save the enemy body
         body = w.world.createBody(enemy_def.body_def);
-        fixture = body.createFixture(enemy_def.fixture_def);
+        body.setTransform(
+                enemy_def.width * width + w.game.camera.viewportWidth,
+                enemy_def.height * height + w.game.camera.viewportHeight / 2f,
+                45);
+        body.setLinearVelocity(enemy_def.max_velocity * -1, 0f);
+        enemy_def.loader.attachFixture(body, enemy_def.name, enemy_def.fixture_def, 1f);
         body.setUserData(this);
+        //Save texture region width
+        enemy_def.width = width;
+        enemy_def.height = height;
     }
 
     @Override

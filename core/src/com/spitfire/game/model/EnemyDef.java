@@ -2,6 +2,7 @@ package com.spitfire.game.model;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.spitfire.game.misc.BodyEditorLoader;
 
 /**
  * Holds all the information for an enemy. This is unique to the instance of the object and will
@@ -10,12 +11,14 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 public class EnemyDef {
 
     //-----Fields
-    final protected String name; //The name of the enemy
-    final private int max_velocity; //The top velocity a enemy to get to
-    final private int health; //The total amount of damage the enemy can take before death
-    final private boolean isBoss; //Determines if this enemy is a boss or not
+    final String name; //The name of the enemy
+    final int max_velocity; //The top velocity a enemy to get to
+    final int health; //The total amount of damage the enemy can take before death
+    final boolean isBoss; //Determines if this enemy is a boss or not
     final BodyDef body_def; //The internal information for a Box2D body
     final FixtureDef fixture_def; //The internal information for a Box2D fixture
+
+    final BodyEditorLoader loader; //The loader for this projectile
 
     int width, height; //Width and height of the enemy from within the texture
 
@@ -30,13 +33,14 @@ public class EnemyDef {
      * @param bd body_def: The internal information for a Box2D body
      * @param fd fixture_def: The internal information for a Box2D fixture
      */
-    public EnemyDef(String n, int mv, int h, boolean boss, BodyDef bd, FixtureDef fd) {
+    public EnemyDef(String n, int mv, int h, boolean boss, BodyDef bd, FixtureDef fd, BodyEditorLoader loader) {
         name = n;
         max_velocity = mv;
         health = h;
         isBoss = boss;
         body_def = bd;
         fixture_def = fd;
+        this.loader = loader;
     }
 
     /**
@@ -50,6 +54,7 @@ public class EnemyDef {
         isBoss = ed.isBoss;
         body_def = ed.body_def;
         fixture_def = ed.fixture_def;
+        loader = ed.loader;
     }
 
     //-----Methods
