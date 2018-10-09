@@ -1,10 +1,9 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
+import com.spitfire.game.controller.DamageListener;
 import com.spitfire.game.controller.Formation;
 import com.spitfire.game.controller.Level;
 import com.spitfire.game.controller.MyGame;
@@ -31,9 +30,11 @@ public class MyWorld {
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
     World world = null; //The physical world all the object bodies exist on
+    private ContactListener damageListener;
 
     private static final Vector2 GRAVITY = new Vector2(0,0); //The gravity of the world
 
+    private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
     //-----Constructors
 
     /**
@@ -54,6 +55,9 @@ public class MyWorld {
             world.dispose();
 
         world = new World(GRAVITY, true);
+
+        damageListener = new DamageListener();
+        world.setContactListener(damageListener);
 
         if (projectile_pool != null)
             projectile_pool.clear();
@@ -107,8 +111,8 @@ public class MyWorld {
         }
     }
 
-    //TODO move enemies forward
     public void step() {
+        debugRenderer.render(world, game.camera.combined);
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
 

@@ -29,10 +29,8 @@ public class Projectile extends Entity {
         projectile_def.height = texture_atlas.getRegions().get(0).originalHeight;
         //Create and save body
         body = w.world.createBody(projectile_def.body_def);
-        projectile_def.loader.attachFixture(body, projectile_def.name, projectile_def.fixture_def, 0.25f);
+        projectile_def.loader.attachFixture(body, projectile_def.name, projectile_def.fixture_def, 60f);
         body.setUserData(this);
-        //Create and save fixture
-        fixture = body.createFixture(projectile_def.fixture_def);
         //Body initial velocity, if any
         body.setLinearVelocity(projectile_def.current_velocity);
     }

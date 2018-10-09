@@ -1,6 +1,7 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.CircleShape;
 
 /**
  * Main object and enemy in the game. Each enemy runs from right to left. The player loses if too
@@ -34,9 +35,9 @@ public class Enemy extends Entity {
         body.setTransform(
                 enemy_def.width * width + w.game.camera.viewportWidth,
                 enemy_def.height * height + w.game.camera.viewportHeight / 2f,
-                45);
+                0);
         body.setLinearVelocity(enemy_def.max_velocity * -1, 0f);
-        enemy_def.loader.attachFixture(body, enemy_def.name, enemy_def.fixture_def, 1f);
+        enemy_def.loader.attachFixture(body, enemy_def.name, enemy_def.fixture_def, 60f);
         body.setUserData(this);
         //Save texture region width
         enemy_def.width = width;

@@ -6,8 +6,10 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.spitfire.game.controller.Level;
 import com.spitfire.game.controller.MyGame;
 import com.spitfire.game.controller.Turret;
@@ -79,14 +81,21 @@ public class GameScreen implements Screen, InputProcessor {
                     turret.getPointY() - turret.turret_style.turret_projectile.getRegionHeight()/2f);
 
         for (Entity world_entities: game.world.getActiveComponents()) {
-            Vector2 entity_cord = world_entities.getBody().getWorldCenter();
+            Body entity_body = world_entities.getBody();
+            Vector2 entity_cord = entity_body.getWorldCenter();
+            float rotation = entity_body.getAngle() * MathUtils.radiansToDegrees;
             TextureRegion entity_texture = game.resource_manager.getAsset(
                     world_entities.getName(),
                     TextureAtlas.class).findRegion("0");
             game.batch.draw(
                     entity_texture,
-                    entity_cord.x,
-                    entity_cord.y);
+                    entity_cord.x - entity_texture.getRegionWidth() / 2f,
+                    entity_cord.y - entity_texture.getRegionHeight() / 2f,
+                    entity_texture.getRegionWidth() / 2f,
+                    entity_texture.getRegionHeight() / 2f,
+                    entity_texture.getRegionWidth(),
+                    entity_texture.getRegionHeight(),
+                    1f, 1f, rotation);
         }
 
         game.batch.end();

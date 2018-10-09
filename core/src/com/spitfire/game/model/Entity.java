@@ -15,7 +15,6 @@ public abstract class Entity implements IEntity {
     protected TextureAtlas texture_atlas; //The textures which describe this entity
     protected boolean isActive = false; //Determines if the entity is still in use.
     protected Body body; //Contains the physical body of the entity
-    protected Fixture fixture; //Contains the fixture information of the entity
     protected EnumManager.EntityType type; //The type of the entity this is
     //-----Constructors
 
