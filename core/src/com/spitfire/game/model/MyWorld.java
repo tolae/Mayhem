@@ -31,6 +31,8 @@ public class MyWorld {
     private List<Projectile> active_projectiles = null; //Projectiles that are currently being used
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
+    private static final ArrayList<Explosion> EXPLOSION_LIST = new ArrayList<Explosion>();
+
     World world = null; //The physical world all the object bodies exist on
 
     private static final Vector2 GRAVITY = new Vector2(0,0); //The gravity of the world
@@ -160,6 +162,9 @@ public class MyWorld {
             Projectile projectile = (Projectile) iter.next();
             if (!projectile.isActive()) {
                 iter.remove();
+                EXPLOSION_LIST.add(new Explosion(
+                        projectile.body.getPosition(),
+                        40f));
                 world.destroyBody(projectile.body);
                 projectile_pool.free(projectile);
             }
@@ -172,10 +177,29 @@ public class MyWorld {
 
             if (!enemy.isActive()) {
                 iter.remove();
+                EXPLOSION_LIST.add(new Explosion(
+                        enemy.body.getPosition(),
+                        40f));
                 world.destroyBody(enemy.body);
                 enemy_pool.free(enemy);
             }
         }
+
+        iter = EXPLOSION_LIST.iterator();
+
+        while (iter.hasNext()) {
+            Explosion explosion = (Explosion) iter.next();
+            for (Entity entity : this.getActiveComponents()) {
+                if (explosion.contains(entity.body.getWorldCenter())) {
+                    entity.body.applyLinearImpulse(
+                            explosion.explode(entity.body.getWorldCenter()),
+                            entity.body.getWorldCenter(),
+                            true);
+                }
+            }
+        }
+
+        EXPLOSION_LIST.clear();
     }
 
     /**

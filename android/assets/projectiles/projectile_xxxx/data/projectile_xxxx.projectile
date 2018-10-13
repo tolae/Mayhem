@@ -1,7 +1,7 @@
 #Projectile Name
 projectile_xxxx
 #Projectile Velocity
-20
+200
 #Projectile Damage
 10
 #Projectile Bounces

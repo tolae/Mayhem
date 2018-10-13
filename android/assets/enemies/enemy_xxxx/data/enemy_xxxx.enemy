@@ -7,6 +7,6 @@ enemy_xxxx
 #Enemy boss
 true
 #Enemy Density
-1
+0.01
 #Enemy Restitution (bounciness)
-0.6
+1
