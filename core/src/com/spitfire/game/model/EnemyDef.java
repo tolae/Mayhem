@@ -55,6 +55,9 @@ public class EnemyDef {
         body_def = ed.body_def;
         fixture_def = ed.fixture_def;
         loader = ed.loader;
+
+        width = ed.width;
+        height = ed.height;
     }
 
     //-----Methods

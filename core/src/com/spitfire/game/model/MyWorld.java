@@ -164,7 +164,7 @@ public class MyWorld {
                 iter.remove();
                 EXPLOSION_LIST.add(new Explosion(
                         projectile.body.getPosition(),
-                        40f));
+                        4000f));
                 world.destroyBody(projectile.body);
                 projectile_pool.free(projectile);
             }
@@ -179,7 +179,7 @@ public class MyWorld {
                 iter.remove();
                 EXPLOSION_LIST.add(new Explosion(
                         enemy.body.getPosition(),
-                        40f));
+                        4000f));
                 world.destroyBody(enemy.body);
                 enemy_pool.free(enemy);
             }

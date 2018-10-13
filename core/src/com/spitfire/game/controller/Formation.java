@@ -32,17 +32,19 @@ public class Formation {
         switch (formation_style) {
             case LINE_1:
                 int current_size = 0;
-                for (int y_counter = 0; y_counter < size; y_counter++) {
+                for (int y_counter = -2; y_counter < size-2;) {
                     //Ensure the current name doesn't go over the name length
-                    if (current_size > names.length)
-                        current_size = 0;
+                    current_size %= size;
                     //Ensure there is a name to add to the position
                     if (names[current_size] != null) {
                         positions.add(new Position(
                                 names[current_size],
                                 0,
                                 y_counter));
+                        y_counter++;
                         current_size++;
+                    } else {
+                        current_size = 0; //Out of names, go back to the beginning
                     }
                 }
                 break;
