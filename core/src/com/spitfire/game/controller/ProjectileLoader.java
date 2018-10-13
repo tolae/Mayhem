@@ -25,15 +25,16 @@ public class ProjectileLoader extends
 	/*File parsing line constants*/
 	private static final int PROJECTILE_NAME = 0;
 	private static final int PROJECTILE_VELOCITY = 1;
-	private static final int PROJECTILE_BOUNCES = 2;
-	private static final int PROJECTILE_DENSITY = 3;
-	private static final int PROJECTILE_RESTITUTION = 4;
+	private static final int PROJECTILE_DAMAGE = 2;
+	private static final int PROJECTILE_BOUNCES = 3;
+	private static final int PROJECTILE_DENSITY = 4;
+	private static final int PROJECTILE_RESTITUTION = 5;
 	/*Projectile Constants*/
     //Identifies what this object is
-    private static final short CATE_BITS = EntityType.PROJECTILE.val;
+    private static final short CATE_BITS = EntityType.getVal(EntityType.PROJECTILE);
     //Identifies what this object collides with
     private static final short MASK_BITS = 
-        (short)(EntityType.ENEMY.val | EntityType.WALL.val);
+        (short)(EntityType.getVal(EntityType.ENEMY) | EntityType.getVal(EntityType.WALL));
     //Box2D object friction
 	private static final float FRICTION = 0;
 	/*Actual ProjectileDef to save*/
@@ -75,6 +76,7 @@ public class ProjectileLoader extends
     		String n = "";
     		int v = 0;
     		int b = 0;
+    		int d = 0;
     		BodyDef bd = new BodyDef();
     		FixtureDef fd = new FixtureDef();
     		while ((line = reader.readLine()) != null) {
@@ -96,6 +98,9 @@ public class ProjectileLoader extends
     				case PROJECTILE_RESTITUTION:
     					fd.restitution = Float.parseFloat(line);
     					break;
+                    case PROJECTILE_DAMAGE:
+                        d = Integer.parseInt(line);
+                        break;
     				default:
     					break;
     			}
@@ -108,7 +113,7 @@ public class ProjectileLoader extends
     		fd.friction = FRICTION;
     		fd.filter.categoryBits = CATE_BITS;
     		fd.filter.maskBits = MASK_BITS;
-    		pd = new ProjectileDef(n, v, b, bd, fd, bel);
+    		pd = new ProjectileDef(n, v, b, d, bd, fd, bel);
     	} catch (Exception e) {
     		e.printStackTrace();
     	}

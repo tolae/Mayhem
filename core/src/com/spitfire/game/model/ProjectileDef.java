@@ -13,15 +13,13 @@ import com.spitfire.game.misc.BodyEditorLoader;
 public class ProjectileDef {
 
     //-----Fields
-    protected final String name; //The name of the projectile
-    private final int max_velocity; //The top velocity a projectile to get to.
-    private final int max_bounces; //The total amount of bounces the projectile has in its life time.
+    final String name; //The name of the projectile
+    final int max_velocity; //The top velocity a projectile to get to.
+    final int max_bounces; //The total amount of bounces the projectile has in its life time.
+    final int damage;
     final BodyDef body_def; //The internal information for a Box2D body.
     final FixtureDef fixture_def; //The internal information for a Box2D fixture.
     final BodyEditorLoader loader; //The loader for this projectile
-
-    Vector2 current_velocity; //The initial velocity of the projectile
-    private int current_bounces; //The initial bounce count of the projectile
 
     int width, height; //The projectiles texture width and height
 
@@ -30,18 +28,15 @@ public class ProjectileDef {
      * Base constructor for the projectile definition.
      * @param n name: The name of the projectile
      * @param mv max_velocity: The top velocity a projectile to get to
-     * @param cv current_velocity: The initial velocity of the projectile
      * @param mb max_bounces: The total amount of bounces the projectile has in its life time
-     * @param cb current_bounces: The initial bounce count of the projectile
      * @param bd body_def: The internal information for a Box2D body
      * @param fd fixture_def: The internal information for a Box2D fixture
      */
-    public ProjectileDef(String n, int mv, Vector2 cv, int mb, int cb, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
+    public ProjectileDef(String n, int mv, int mb, int damage, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
         name = n;
         max_velocity = mv;
-        current_velocity = cv;
         max_bounces = mb;
-        current_bounces = cb;
+        this.damage = damage;
         body_def = bd;
         fixture_def = fd;
         loader = bel;
@@ -52,58 +47,19 @@ public class ProjectileDef {
      * @param pd projectile_def: The projectile definition
      */
     public ProjectileDef(ProjectileDef pd) {
-        this(pd.name, pd.max_velocity, pd.current_velocity,
-                pd.max_bounces, pd.current_bounces, pd.body_def, pd.fixture_def, pd.loader);
+        this(pd.name, pd.max_velocity, pd.max_bounces, pd.damage, pd.body_def, pd.fixture_def, pd.loader);
 
         this.width = pd.width;
         this.height = pd.height;
     }
-
-    /**
-     * Constructor with zero'd initials. Requires a name.
-     */
-    public ProjectileDef(String n, int mv, int mb, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
-        this(n, mv, new Vector2(0,0), mb, 0, bd, fd, bel);
-    }
-
     //-----Methods
 
     //-----Getters and Setters
-
-
-    public int getMaxVelocity() {
-        return max_velocity;
+    public void setPosition(float x_pos, float y_pos) {
+        this.body_def.position.set(x_pos, y_pos);
     }
 
-    public int getMaxBounces() {
-        return max_bounces;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public BodyDef getBodyDef() {
-        return body_def;
-    }
-
-    public FixtureDef getFixtureDef() {
-        return fixture_def;
-    }
-
-    public Vector2 getCurrentVelocity() {
-        return current_velocity;
-    }
-
-    public void setCurrentVelocity(Vector2 cv) {
-        this.current_velocity = cv;
-    }
-
-    public int getCurrentBounces() {
-        return current_bounces;
-    }
-
-    public void setCurrentBounces(int cb) {
-        this.current_bounces = cb;
+    public void setVelocity(Vector2 velocity, float scale) {
+        this.body_def.linearVelocity.set(velocity.scl(scale * max_velocity));
     }
 }

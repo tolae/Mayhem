@@ -10,8 +10,8 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Projectile extends Entity {
 
     //-----Fields
-
     private ProjectileDef projectile_def; //Internal projectile information
+    private int bounces;
 
     //-----Methods
 
@@ -31,8 +31,8 @@ public class Projectile extends Entity {
         body = w.world.createBody(projectile_def.body_def);
         projectile_def.loader.attachFixture(body, projectile_def.name, projectile_def.fixture_def, 60f);
         body.setUserData(this);
-        //Body initial velocity, if any
-        body.setLinearVelocity(projectile_def.current_velocity);
+        //Set initial bounces
+        bounces = projectile_def.max_bounces;
     }
 
     @Override
@@ -49,5 +49,16 @@ public class Projectile extends Entity {
     }
 
     @Override
-    public String getName() { return projectile_def.getName(); }
+    public String getName() { return projectile_def.name; }
+
+    public void bounce() {
+        bounces--;
+
+        if (bounces < 0)
+            onDeath();
+    }
+
+    public int getDamage() {
+        return projectile_def.damage;
+    }
 }

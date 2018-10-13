@@ -21,19 +21,21 @@ public class EnumManager {
         WALL(0x0004),
         ALL(0xFFFF);
 
-        public short val;
+        private short val;
 
         EntityType(int val) {
             this.val = (short) val;
         }
 
-        public EntityType getType(short val) {
-            int ordinal = 31 - Integer.numberOfLeadingZeros(val);
-            if (ordinal <= -1) //Undefined
-                return EntityType.UNDEFINED;
+        public static EntityType getType(short val) {
+            int ordinal = 32 - Integer.numberOfLeadingZeros(val);
             if (ordinal > EntityType.values().length) //Out of bounds
                 return EntityType.UNDEFINED;
             return EntityType.values()[ordinal];
+        }
+
+        public static short getVal(EntityType type) {
+            return type.val;
         }
     }
 }

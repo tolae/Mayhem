@@ -1,8 +1,10 @@
 #Projectile Name
 projectile_xxxx
-#Projectile velocity
+#Projectile Velocity
 20
-#Projectile bounces
+#Projectile Damage
+10
+#Projectile Bounces
 3
 #Projectile Density
 1

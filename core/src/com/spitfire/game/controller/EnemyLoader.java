@@ -28,9 +28,9 @@ public class EnemyLoader extends AsynchronousAssetLoader<EnemyDef, EnemyLoader.E
     private static final int ENEMY_RESTITUTION = 5;
     /*Enemy Constants*/
     //Identifies what this object is
-    private static final short CATE_BITS = EntityType.ENEMY.val;
+    private static final short CATE_BITS = EntityType.getVal(EntityType.ENEMY);
     //Identifies what this object collides with
-    private static final short MASK_BITS = EntityType.ALL.val;
+    private static final short MASK_BITS = EntityType.getVal(EntityType.ALL);
     //Box2D object friction
     private static final float FRICTION = 0;
     /*Actual EnemyDef to save*/

@@ -57,10 +57,9 @@ public class Turret {
                 0.25f,
                 1f);
 
-        descriptor.setCurrentVelocity(
-                end_loci.sub(start_loci).nor().scl(-1f * magnitude * descriptor.getMaxVelocity()));
+        descriptor.setVelocity(end_loci.sub(start_loci).nor(), magnitude * -1);
 
-        descriptor.getBodyDef().position.set(
+        descriptor.setPosition(
                 touchable.x - turret_style.turret_base.getRegionWidth()/2f,
                 touchable.y - turret_style.turret_base.getRegionHeight()/2f);
 

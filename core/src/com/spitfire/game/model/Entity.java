@@ -11,9 +11,8 @@ import com.spitfire.game.controller.EnumManager;
 public abstract class Entity implements IEntity {
 
     //-----Fields
-
-    protected TextureAtlas texture_atlas; //The textures which describe this entity
-    protected boolean isActive = false; //Determines if the entity is still in use.
+    TextureAtlas texture_atlas; //The textures which describe this entity
+    private boolean isActive = false; //Determines if the entity is still in use.
     protected Body body; //Contains the physical body of the entity
     protected EnumManager.EntityType type; //The type of the entity this is
     //-----Constructors
