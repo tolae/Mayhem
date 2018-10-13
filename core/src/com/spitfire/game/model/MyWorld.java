@@ -3,10 +3,7 @@ package com.spitfire.game.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Pool;
-import com.spitfire.game.controller.DamageListener;
-import com.spitfire.game.controller.Formation;
-import com.spitfire.game.controller.Level;
-import com.spitfire.game.controller.MyGame;
+import com.spitfire.game.controller.*;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -191,10 +188,7 @@ public class MyWorld {
             Explosion explosion = (Explosion) iter.next();
             for (Entity entity : this.getActiveComponents()) {
                 if (explosion.contains(entity.body.getWorldCenter())) {
-                    entity.body.applyLinearImpulse(
-                            explosion.explode(entity.body.getWorldCenter()),
-                            entity.body.getWorldCenter(),
-                            true);
+                    ((Entity)entity.body.getUserData()).explode(explosion);
                 }
             }
         }

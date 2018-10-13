@@ -1,6 +1,7 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.physics.box2d.MassData;
 
 /**
@@ -61,6 +62,12 @@ public class Enemy extends Entity {
         super.onDeath();
     }
 
+    @Override
+    void explode(Explosion explosion) {
+        super.explode(explosion);
+        this.hit(20f);
+    }
+
     private void isDead() {
         if (health < 0)
             onDeath();
@@ -74,6 +81,16 @@ public class Enemy extends Entity {
      */
     public void hit() {
         this.health -= (int) (body.getLinearVelocity().len() * 0.1f);
+
+        isDead();
+    }
+
+    /**
+     * Called when enemy "collided" with an explosion.
+     * @param damage of the explosion
+     */
+    public void hit(float damage) {
+        this.health -= (int) damage;
 
         isDead();
     }

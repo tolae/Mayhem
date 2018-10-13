@@ -24,6 +24,10 @@ public abstract class Entity implements IEntity {
         isActive = false;
     }
 
+    void explode(Explosion explosion) {
+        this.body.applyLinearImpulse(explosion.explode(body.getWorldCenter()), body.getWorldCenter(), true);
+    }
+
     //-----Getters and Setters
 
     /**
@@ -38,7 +42,7 @@ public abstract class Entity implements IEntity {
      * Sets the entity active.
      * @param active if the entity should be active or not.
      */
-    public void setActive(boolean active) {
+    void setActive(boolean active) {
         isActive = active;
     }
 

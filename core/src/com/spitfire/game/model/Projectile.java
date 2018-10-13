@@ -1,6 +1,7 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -51,12 +52,18 @@ public class Projectile extends Entity {
     }
 
     @Override
+    void explode(Explosion explosion) {
+        super.explode(explosion);
+        this.bounce();
+    }
+
+    @Override
     public String getName() { return projectile_def.name; }
 
     public void bounce() {
         bounces--;
 
-        //if (bounces < 0)
+        if (bounces < 0)
             onDeath();
     }
 
