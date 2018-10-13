@@ -9,6 +9,8 @@ import com.spitfire.game.controller.Level;
 import com.spitfire.game.controller.MyGame;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -30,7 +32,6 @@ public class MyWorld {
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
     World world = null; //The physical world all the object bodies exist on
-    private ContactListener damageListener;
 
     private static final Vector2 GRAVITY = new Vector2(0,0); //The gravity of the world
 
@@ -56,8 +57,7 @@ public class MyWorld {
 
         world = new World(GRAVITY, true);
 
-        damageListener = new DamageListener();
-        world.setContactListener(damageListener);
+        world.setContactListener(new DamageListener());
 
         if (projectile_pool != null)
             projectile_pool.clear();
@@ -84,12 +84,12 @@ public class MyWorld {
         if (active_projectiles != null)
             active_projectiles.clear();
         else
-            active_projectiles = new ArrayList<Projectile>();
+            active_projectiles = Collections.synchronizedList(new ArrayList<Projectile>());
 
         if (active_enemies != null)
             active_enemies.clear();
         else
-            active_enemies = new ArrayList<Enemy>();
+            active_enemies = Collections.synchronizedList(new ArrayList<Enemy>());
     }
 
     /**
@@ -112,6 +112,7 @@ public class MyWorld {
     }
 
     public void step() {
+        /*Step the world*/
         debugRenderer.render(world, game.camera.combined);
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
     }
@@ -149,6 +150,32 @@ public class MyWorld {
         master_list.addAll(active_enemies);
 
         return master_list;
+    }
+
+    public void clean() {
+        /*Check active list to see if anyone is no longer active*/
+        Iterator iter = active_projectiles.iterator();
+
+        while (iter.hasNext()) {
+            Projectile projectile = (Projectile) iter.next();
+            if (!projectile.isActive()) {
+                iter.remove();
+                world.destroyBody(projectile.body);
+                projectile_pool.free(projectile);
+            }
+        }
+
+        iter = active_enemies.iterator();
+
+        while (iter.hasNext()) {
+            Enemy enemy = (Enemy) iter.next();
+
+            if (!enemy.isActive()) {
+                iter.remove();
+                world.destroyBody(enemy.body);
+                enemy_pool.free(enemy);
+            }
+        }
     }
 
     /**

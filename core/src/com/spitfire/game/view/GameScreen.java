@@ -81,24 +81,28 @@ public class GameScreen implements Screen, InputProcessor {
                     turret.getPointY() - turret.turret_style.turret_projectile.getRegionHeight()/2f);
 
         for (Entity world_entities: game.world.getActiveComponents()) {
-            Body entity_body = world_entities.getBody();
-            Vector2 entity_cord = entity_body.getWorldCenter();
-            float rotation = entity_body.getAngle() * MathUtils.radiansToDegrees;
-            TextureRegion entity_texture = game.resource_manager.getAsset(
-                    world_entities.getName(),
-                    TextureAtlas.class).findRegion("0");
-            game.batch.draw(
-                    entity_texture,
-                    entity_cord.x - entity_texture.getRegionWidth() / 2f,
-                    entity_cord.y - entity_texture.getRegionHeight() / 2f,
-                    entity_texture.getRegionWidth() / 2f,
-                    entity_texture.getRegionHeight() / 2f,
-                    entity_texture.getRegionWidth(),
-                    entity_texture.getRegionHeight(),
-                    1f, 1f, rotation);
+            if (world_entities.isActive()) {
+                Body entity_body = world_entities.getBody();
+                Vector2 entity_cord = entity_body.getWorldCenter();
+                float rotation = entity_body.getAngle() * MathUtils.radiansToDegrees;
+                TextureRegion entity_texture = game.resource_manager.getAsset(
+                        world_entities.getName(),
+                        TextureAtlas.class).findRegion("0");
+                game.batch.draw(
+                        entity_texture,
+                        entity_cord.x - entity_texture.getRegionWidth() / 2f,
+                        entity_cord.y - entity_texture.getRegionHeight() / 2f,
+                        entity_texture.getRegionWidth() / 2f,
+                        entity_texture.getRegionHeight() / 2f,
+                        entity_texture.getRegionWidth(),
+                        entity_texture.getRegionHeight(),
+                        1f, 1f, rotation);
+            }
         }
 
         game.batch.end();
+
+        game.world.clean();
 
         game.stage.draw();
 

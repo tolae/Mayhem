@@ -33,6 +33,8 @@ public class Projectile extends Entity {
         body.setUserData(this);
         //Set initial bounces
         bounces = projectile_def.max_bounces;
+        //Set to active
+        this.setActive(true);
     }
 
     @Override
@@ -54,7 +56,7 @@ public class Projectile extends Entity {
     public void bounce() {
         bounces--;
 
-        if (bounces < 0)
+        //if (bounces < 0)
             onDeath();
     }
 

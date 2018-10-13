@@ -1,7 +1,6 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.physics.box2d.CircleShape;
 
 /**
  * Main object and enemy in the game. Each enemy runs from right to left. The player loses if too
@@ -47,6 +46,8 @@ public class Enemy extends Entity {
         enemy_def.height = height;
         //Set initial health
         this.health = enemy_def.health;
+        //Set to active
+        this.setActive(true);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class Enemy extends Entity {
     }
 
     private void isDead() {
-        if (health < 0)
+        //if (health < 0)
             onDeath();
     }
 
