@@ -19,6 +19,7 @@ public class MyWorld {
     private static final float TIME_STEP = 1/45f;
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
+    private static final int BARRIER_HEIGHT = 280;
 
     protected final MyGame game; //Application this world is apart of
 
@@ -28,7 +29,14 @@ public class MyWorld {
     private List<Projectile> active_projectiles = null; //Projectiles that are currently being used
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
-    private static final ArrayList<Explosion> EXPLOSION_LIST = new ArrayList<Explosion>();
+    private final BodyDef barrier_body = new BodyDef();
+    private final FixtureDef barrier_fix = new FixtureDef();
+    private Body top_barrier;
+    private Fixture top_fix;
+    private Body bottom_barrier;
+    private Fixture bottom_fix;
+
+    private final ArrayList<Explosion> EXPLOSION_LIST = new ArrayList<Explosion>();
 
     World world = null; //The physical world all the object bodies exist on
 
@@ -89,6 +97,26 @@ public class MyWorld {
             active_enemies.clear();
         else
             active_enemies = Collections.synchronizedList(new ArrayList<Enemy>());
+
+        barrier_body.type = BodyDef.BodyType.StaticBody;
+        barrier_fix.filter.categoryBits = EnumManager.EntityType.getVal(EnumManager.EntityType.WALL);
+        barrier_fix.filter.maskBits = EnumManager.EntityType.getVal(EnumManager.EntityType.ALL);
+        barrier_fix.friction = 1f;
+        barrier_fix.density = 1f;
+        barrier_fix.restitution = 1f;
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(game.camera.viewportWidth, BARRIER_HEIGHT);
+        barrier_fix.shape = shape;
+
+        barrier_body.position.set(new Vector2(0, game.camera.viewportHeight));
+        top_barrier = world.createBody(barrier_body);
+        top_fix = top_barrier.createFixture(barrier_fix);
+        barrier_body.position.set(new Vector2(0, 0));
+        bottom_barrier = world.createBody(barrier_body);
+        bottom_fix = bottom_barrier.createFixture(barrier_fix);
+
+        shape.dispose();
     }
 
     /**
@@ -204,6 +232,10 @@ public class MyWorld {
         enemy_pool.clear();
         active_projectiles.clear();
         active_enemies.clear();
+        top_barrier.destroyFixture(top_fix);
+        world.destroyBody(top_barrier);
+        bottom_barrier.destroyFixture(bottom_fix);
+        world.destroyBody(bottom_barrier);
         world.dispose();
     }
     //-----Getters and Setters

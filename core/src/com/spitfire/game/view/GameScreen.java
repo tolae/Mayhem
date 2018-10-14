@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Affine2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -22,6 +23,7 @@ public class GameScreen implements Screen, InputProcessor {
     private final MyGame game;
 
     private TextureRegion background;
+    private TextureRegion barrier_top, barrier_bottom;
     private Turret turret;
 
     private Vector3 tp;
@@ -30,6 +32,9 @@ public class GameScreen implements Screen, InputProcessor {
         game = g;
 
         background = g.resource_manager.getTextureRegion("back");
+        barrier_top = g.resource_manager.getTextureRegion("barrier");
+        barrier_bottom = g.resource_manager.getTextureRegion("barrier");
+        barrier_bottom.flip(false, true);
 
         turret = new Turret(
                 game.camera.viewportWidth/20f,
@@ -69,6 +74,10 @@ public class GameScreen implements Screen, InputProcessor {
 
 		game.batch.begin();
 		game.batch.draw(background, 0, 0);
+        Affine2 affine2 = new Affine2();
+        affine2.translate(0, game.camera.viewportHeight - barrier_top.getRegionHeight());
+        game.batch.draw(barrier_top, barrier_top.getRegionWidth(), barrier_top.getRegionHeight(), affine2);
+        game.batch.draw(barrier_bottom, 0, 0);
 
 		game.batch.draw(
 		        turret.turret_style.turret_base,

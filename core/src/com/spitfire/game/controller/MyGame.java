@@ -20,8 +20,8 @@ public class MyGame extends Game {
 
     //-----Fields
     /*Camera Statics*/
-    //private static final int CAMERA_WIDTH = 1920; Possibly use these for longer maps
-    //private static final int CAMERA_HEIGHT = 1080;
+    private static final int CAMERA_WIDTH = 1920;
+    private static final int CAMERA_HEIGHT = 1080;
     public MyWorld world; //The main container for all model related processes
 
     public ResourceManager resource_manager; //The main container for all view related processes
@@ -39,8 +39,8 @@ public class MyGame extends Game {
         resource_manager = new ResourceManager();
 
         camera = new OrthographicCamera(
-        	Gdx.graphics.getWidth(), 
-        	Gdx.graphics.getHeight());
+                CAMERA_WIDTH,
+                CAMERA_HEIGHT);
 
         camera.position.set(
         	camera.viewportWidth / 2f, 

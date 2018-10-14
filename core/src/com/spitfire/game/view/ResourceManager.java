@@ -109,7 +109,7 @@ public class ResourceManager {
         if (toReturn == null) {
             toReturn = manager.get(MAIN_DIR+"back.atlas", TextureAtlas.class).findRegion(n);
         }
-        return toReturn;
+        return new TextureRegion(toReturn);
     }
 
     public final <T> T getAsset(String name, Class<T> type) {
