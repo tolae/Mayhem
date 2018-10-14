@@ -27,7 +27,10 @@ public class Level {
      * @return A list of positions for each unit in the formation.
      */
     public Formation getFormation() {
-        return current_wave.next().getNextFormation();
+        if (current_wave.hasNext())
+            return current_wave.next().getNextFormation();
+        else
+            return null;
     }
     //-----Getters and Setters
     public int getMaxWaves() {

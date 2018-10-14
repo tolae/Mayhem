@@ -146,6 +146,11 @@ public class MyWorld {
     public void populate(Level level) {
         Formation formation = level.getFormation();
 
+        if (formation == null) {
+            game.completed();
+            return;
+        }
+
         for (Position p: formation.createFormation()) {
             EnemyDef enemy_def;
             if ((enemy_def = game.resource_manager.getAsset(
@@ -159,6 +164,7 @@ public class MyWorld {
     }
 
     public void step() {
+        this.update();
         /*Step the world*/
         debugRenderer.render(world, game.camera.combined);
         world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
@@ -199,7 +205,7 @@ public class MyWorld {
         return master_list;
     }
 
-    public void clean() {
+    private void update() {
         /*Check active list to see if anyone is no longer active*/
         Iterator iter = active_projectiles.iterator();
 
@@ -230,6 +236,7 @@ public class MyWorld {
             }
         }
 
+        /* Create explosions for those who have died */
         iter = EXPLOSION_LIST.iterator();
 
         while (iter.hasNext()) {
@@ -242,6 +249,12 @@ public class MyWorld {
         }
 
         EXPLOSION_LIST.clear();
+
+        /* Check the number of live enemies */
+        if (active_enemies.size() <= 0) {
+            if (game.isPlaying)
+                this.populate(game.current_level);
+        }
     }
 
     /**

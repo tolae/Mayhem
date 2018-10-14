@@ -31,6 +31,8 @@ public class GameScreen implements Screen, InputProcessor {
     GameScreen(final MyGame g) {
         game = g;
 
+        game.isPlaying = true;
+
         background = g.resource_manager.getTextureRegion("back");
         barrier_top = g.resource_manager.getTextureRegion("barrier");
         barrier_bottom = g.resource_manager.getTextureRegion("barrier");
@@ -110,8 +112,6 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         game.batch.end();
-
-        game.world.clean();
 
         game.stage.draw();
 

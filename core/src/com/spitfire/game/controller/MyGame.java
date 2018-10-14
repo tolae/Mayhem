@@ -31,6 +31,7 @@ public class MyGame extends Game {
     public Stage stage; //Stage for actors and the HUD
 
     public Level current_level; //The current level the game is on
+    public boolean isPlaying = false; //If the game is active or not
     //-----Constructors
     //-----Methods
     @Override
@@ -88,6 +89,11 @@ public class MyGame extends Game {
 
     public void lose() {
         this.dispose();
+    }
+
+    public void completed() {
+        //TODO Return to finished screen or w.e
+        isPlaying = false;
     }
     //-----Getters and Setters
 }
