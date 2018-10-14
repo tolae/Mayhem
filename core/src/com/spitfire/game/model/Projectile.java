@@ -36,6 +36,7 @@ public class Projectile extends Entity {
         bounces = projectile_def.max_bounces;
         //Set to active
         this.setActive(true);
+        this.setShouldExplode(true);
     }
 
     @Override

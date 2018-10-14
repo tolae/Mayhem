@@ -42,11 +42,13 @@ public class DamageListener implements ContactListener {
         if (cate_bits_A == EnumManager.EntityType.BOUND) {
             if (((Boolean) obj_A))
                 game.lose();
+            ((Entity) obj_B).setShouldExplode(false);
             ((Entity) obj_B).onDeath();
             return;
         } if (cate_bits_B == EnumManager.EntityType.BOUND) {
             if (((Boolean) obj_B))
                 game.lose();
+            ((Entity) obj_A).setShouldExplode(false);
             ((Entity) obj_A).onDeath();
         }
         //Enemy collided with Projectile

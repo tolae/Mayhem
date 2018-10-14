@@ -213,9 +213,11 @@ public class MyWorld {
             Projectile projectile = (Projectile) iter.next();
             if (!projectile.isActive()) {
                 iter.remove();
-                EXPLOSION_LIST.add(new Explosion(
-                        projectile.body.getPosition(),
-                        4000f));
+                if (projectile.shouldExplode()) {
+                    EXPLOSION_LIST.add(new Explosion(
+                            projectile.body.getPosition(),
+                            4000f));
+                }
                 world.destroyBody(projectile.body);
                 projectile_pool.free(projectile);
             }
@@ -228,9 +230,11 @@ public class MyWorld {
 
             if (!enemy.isActive()) {
                 iter.remove();
-                EXPLOSION_LIST.add(new Explosion(
-                        enemy.body.getPosition(),
-                        4000f));
+                if (enemy.shouldExplode()) {
+                    EXPLOSION_LIST.add(new Explosion(
+                            enemy.body.getPosition(),
+                            4000f));
+                }
                 world.destroyBody(enemy.body);
                 enemy_pool.free(enemy);
             }

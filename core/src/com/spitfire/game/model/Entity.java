@@ -15,6 +15,7 @@ public abstract class Entity implements IEntity {
     private boolean isActive = false; //Determines if the entity is still in use.
     protected Body body; //Contains the physical body of the entity
     protected EnumManager.EntityType type; //The type of the entity this is
+    private boolean shouldExplode = false;
     //-----Constructors
 
     //-----Methods
@@ -45,6 +46,12 @@ public abstract class Entity implements IEntity {
     void setActive(boolean active) {
         isActive = active;
     }
+
+    public void setShouldExplode(boolean explode) {
+        shouldExplode = explode;
+    }
+
+    public boolean shouldExplode() { return shouldExplode; }
 
     public TextureAtlas getTextureAtlas() {
         return texture_atlas;

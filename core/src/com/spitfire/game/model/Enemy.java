@@ -1,8 +1,6 @@
 package com.spitfire.game.model;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Interpolation;
-import com.badlogic.gdx.physics.box2d.MassData;
 
 /**
  * Main object and enemy in the game. Each enemy runs from right to left. The player loses if too
@@ -50,6 +48,7 @@ public class Enemy extends Entity {
         this.health = enemy_def.health;
         //Set to active
         this.setActive(true);
+        this.setShouldExplode(true);
     }
 
     @Override
