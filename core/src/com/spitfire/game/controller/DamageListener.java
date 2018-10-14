@@ -1,13 +1,21 @@
 package com.spitfire.game.controller;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.spitfire.game.model.Enemy;
+import com.spitfire.game.model.Entity;
 import com.spitfire.game.model.Projectile;
 
 public class DamageListener implements ContactListener {
+
+    private final MyGame game; //Instance of this game
+
+    public DamageListener(MyGame game) {
+        this.game = game;
+    }
 
     @Override
     public void beginContact(Contact contact) {
@@ -29,6 +37,17 @@ public class DamageListener implements ContactListener {
             ((Projectile) obj_A).bounce();
         } if (cate_bits_B == EnumManager.EntityType.PROJECTILE) {
             ((Projectile) obj_B).bounce();
+        }
+        //Something hit the end bounds. Delete them.
+        if (cate_bits_A == EnumManager.EntityType.BOUND) {
+            if (((Boolean) obj_A))
+                game.lose();
+            ((Entity) obj_B).onDeath();
+            return;
+        } if (cate_bits_B == EnumManager.EntityType.BOUND) {
+            if (((Boolean) obj_B))
+                game.lose();
+            ((Entity) obj_A).onDeath();
         }
         //Enemy collided with Projectile
         if (cate_bits_A == EnumManager.EntityType.PROJECTILE && cate_bits_B == EnumManager.EntityType.ENEMY) {

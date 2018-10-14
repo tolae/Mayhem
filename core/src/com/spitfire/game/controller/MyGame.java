@@ -85,5 +85,9 @@ public class MyGame extends Game {
         current_level = level;
         world.populate(level);
     }
+
+    public void lose() {
+        this.dispose();
+    }
     //-----Getters and Setters
 }

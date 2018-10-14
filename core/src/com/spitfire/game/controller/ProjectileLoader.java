@@ -34,7 +34,9 @@ public class ProjectileLoader extends
     private static final short CATE_BITS = EntityType.getVal(EntityType.PROJECTILE);
     //Identifies what this object collides with
     private static final short MASK_BITS = 
-        (short)(EntityType.getVal(EntityType.ENEMY) | EntityType.getVal(EntityType.WALL));
+        (short)(EntityType.getVal(EntityType.ENEMY) |
+				EntityType.getVal(EntityType.WALL) |
+				EntityType.getVal(EntityType.BOUND));
     //Box2D object friction
 	private static final float FRICTION = 0;
 	/*Actual ProjectileDef to save*/

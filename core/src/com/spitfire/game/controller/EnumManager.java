@@ -19,6 +19,7 @@ public class EnumManager {
         PROJECTILE(0x0001),
         ENEMY(0x0002),
         WALL(0x0004),
+        BOUND(0x0008),
         ALL(0xFFFF);
 
         private short val;

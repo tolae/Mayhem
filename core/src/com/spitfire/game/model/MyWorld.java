@@ -20,6 +20,7 @@ public class MyWorld {
     private static final int VELOCITY_ITERATIONS = 6;
     private static final int POSITION_ITERATIONS = 2;
     private static final int BARRIER_HEIGHT = 280;
+    private static final int BARRER_WIDTH = 128;
 
     protected final MyGame game; //Application this world is apart of
 
@@ -29,12 +30,14 @@ public class MyWorld {
     private List<Projectile> active_projectiles = null; //Projectiles that are currently being used
     private List<Enemy> active_enemies = null; //Enemies that are currently being used
 
-    private final BodyDef barrier_body = new BodyDef();
-    private final FixtureDef barrier_fix = new FixtureDef();
     private Body top_barrier;
     private Fixture top_fix;
     private Body bottom_barrier;
     private Fixture bottom_fix;
+    private Body left_barrier;
+    private Fixture left_fix;
+    private Body right_barrier;
+    private Fixture right_fix;
 
     private final ArrayList<Explosion> EXPLOSION_LIST = new ArrayList<Explosion>();
 
@@ -64,7 +67,7 @@ public class MyWorld {
 
         world = new World(GRAVITY, true);
 
-        world.setContactListener(new DamageListener());
+        world.setContactListener(new DamageListener(game));
 
         if (projectile_pool != null)
             projectile_pool.clear();
@@ -98,6 +101,9 @@ public class MyWorld {
         else
             active_enemies = Collections.synchronizedList(new ArrayList<Enemy>());
 
+        /* Define the upper and lower limits of the map */
+        BodyDef barrier_body = new BodyDef();
+        FixtureDef barrier_fix = new FixtureDef();
         barrier_body.type = BodyDef.BodyType.StaticBody;
         barrier_fix.filter.categoryBits = EnumManager.EntityType.getVal(EnumManager.EntityType.WALL);
         barrier_fix.filter.maskBits = EnumManager.EntityType.getVal(EnumManager.EntityType.ALL);
@@ -106,7 +112,7 @@ public class MyWorld {
         barrier_fix.restitution = 1f;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(game.camera.viewportWidth, BARRIER_HEIGHT);
+        shape.setAsBox(game.camera.viewportWidth + BARRER_WIDTH, BARRIER_HEIGHT);
         barrier_fix.shape = shape;
 
         barrier_body.position.set(new Vector2(0, game.camera.viewportHeight));
@@ -115,6 +121,20 @@ public class MyWorld {
         barrier_body.position.set(new Vector2(0, 0));
         bottom_barrier = world.createBody(barrier_body);
         bottom_fix = bottom_barrier.createFixture(barrier_fix);
+
+        /*Define the right and left limits of the map */
+        shape.setAsBox(1, game.camera.viewportHeight);
+        barrier_fix.shape = shape;
+        barrier_fix.filter.categoryBits = EnumManager.EntityType.getVal(EnumManager.EntityType.BOUND);
+
+        barrier_body.position.set(new Vector2(-BARRER_WIDTH, 0));
+        left_barrier = world.createBody(barrier_body);
+        left_fix = left_barrier.createFixture(barrier_fix);
+        left_barrier.setUserData(true);
+        barrier_body.position.set(new Vector2(game.camera.viewportWidth+BARRER_WIDTH, 0));
+        right_barrier = world.createBody(barrier_body);
+        right_fix = right_barrier.createFixture(barrier_fix);
+        right_barrier.setUserData(false);
 
         shape.dispose();
     }
@@ -236,6 +256,10 @@ public class MyWorld {
         world.destroyBody(top_barrier);
         bottom_barrier.destroyFixture(bottom_fix);
         world.destroyBody(bottom_barrier);
+        left_barrier.destroyFixture(left_fix);
+        world.destroyBody(left_barrier);
+        right_barrier.destroyFixture(right_fix);
+        world.destroyBody(right_barrier);
         world.dispose();
     }
     //-----Getters and Setters
