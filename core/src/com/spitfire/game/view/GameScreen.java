@@ -27,6 +27,8 @@ public class GameScreen implements Screen, InputProcessor {
     private Turret turret;
 
     private Vector3 tp;
+
+    private HUD hud;
     //-----Constructors
     GameScreen(final MyGame g) {
         game = g;
@@ -37,6 +39,8 @@ public class GameScreen implements Screen, InputProcessor {
         barrier_top = g.resource_manager.getTextureRegion("barrier");
         barrier_bottom = g.resource_manager.getTextureRegion("barrier");
         barrier_bottom.flip(false, true);
+
+        hud = new HUD(g);
 
         turret = new Turret(
                 game.camera.viewportWidth/20f,
@@ -112,6 +116,9 @@ public class GameScreen implements Screen, InputProcessor {
         }
 
         game.batch.end();
+
+        hud.act();
+        hud.draw();
 
         game.stage.draw();
 
