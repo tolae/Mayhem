@@ -80,7 +80,7 @@ public class ResourceManager {
         manager.setLoader(BitmapFont.class, new BitmapFontLoader(new FileHandleResolver() {
             @Override
             public FileHandle resolve(String fileName) {
-                return new FileHandle(fileName);
+                return Gdx.files.internal(fileName);
             }
         }));
 
@@ -119,23 +119,27 @@ public class ResourceManager {
     	for(FileHandle file : file_list) {
     	    String filename = file.path().startsWith("/") ? file.path().substring(1) :
                 file.path();
-            Gdx.app.error("Mayhem",
-                    "Filename: " + filename + "\nExtension: " + file.extension());
 
     		if (file.isDirectory() || file.extension().equals(""))
     			loadResourcesInDirectory(filename);
 
-    		if (file.extension().equals(ATLAS_FILE))
+            else if (file.extension().equals(ATLAS_FILE))
     			manager.load(filename, TextureAtlas.class);
 
-    		if (file.extension().equals(PROJECTILE_FILE))
+            else if (file.extension().equals(PROJECTILE_FILE))
     			manager.load(filename, ProjectileDef.class);
 
-    		if (file.extension().equals(ENEMY_FILE))
+            else if (file.extension().equals(ENEMY_FILE))
                 manager.load(filename, EnemyDef.class);
 
-    		if (file.extension().equals(LEVEL_FILE))
+    		else if (file.extension().equals(LEVEL_FILE))
     			manager.load(filename, Level.class);
+
+            else if (file.extension().equals(FONT_FILE))
+                manager.load(filename, BitmapFont.class);
+
+            else
+                System.err.println("Invalid path: " + file.path());
     	}
     }
 
