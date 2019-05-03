@@ -2,6 +2,8 @@ package com.spitfire.game.model;
 
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.spitfire.game.controller.EnemyLoader;
+import com.spitfire.game.controller.EnumManager;
 import com.spitfire.game.misc.BodyEditorLoader;
 
 /**
@@ -11,8 +13,15 @@ import com.spitfire.game.misc.BodyEditorLoader;
 public class EnemyDef {
 
     //-----Fields
+    /*Enemy Constants*/
+    //Identifies what this object is
+    private static final short CATE_BITS = EnumManager.EntityType.getVal(EnumManager.EntityType.ENEMY);
+    //Identifies what this object collides with
+    private static final short MASK_BITS = EnumManager.EntityType.getVal(EnumManager.EntityType.ALL);
+    //Box2D object friction
+    private static final float FRICTION = 0;
     final String name; //The name of the enemy
-    final int max_velocity; //The top velocity a enemy to get to
+    final int max_velocity; //The top velocity a enemy to get to (naturally)
     final int health; //The total amount of damage the enemy can take before death
     final boolean isBoss; //Determines if this enemy is a boss or not
     final BodyDef body_def; //The internal information for a Box2D body
@@ -26,21 +35,18 @@ public class EnemyDef {
 
     /**
      * Base constructor for an enemy definition.
-     * @param n name: The name of the enemy
-     * @param mv max_velocity: The top velocity a enemy to get to
-     * @param h health: The total amount of damage the enemy can take before death
-     * @param boss isBoss: Determines if this enemy is a boss or not
-     * @param bd body_def: The internal information for a Box2D body
-     * @param fd fixture_def: The internal information for a Box2D fixture
+     * @param enemyJSON: A wrapper containing parsed enemy JSON data
+     * @param body_info: A loader used to create the physics body
      */
-    public EnemyDef(String n, int mv, int h, boolean boss, BodyDef bd, FixtureDef fd, BodyEditorLoader loader) {
-        name = n;
-        max_velocity = mv;
-        health = h;
-        isBoss = boss;
-        body_def = bd;
-        fixture_def = fd;
-        this.loader = loader;
+    public EnemyDef(EnemyLoader.EnemyJSON enemyJSON,
+                    BodyEditorLoader body_info) {
+        name = enemyJSON.name;
+        max_velocity = enemyJSON.max_velocity;
+        health = enemyJSON.health;
+        isBoss = enemyJSON.isBoss;
+        body_def = createBodyDef();
+        fixture_def = createFixtureDef(enemyJSON);
+        loader = body_info;
     }
 
     /**
@@ -61,6 +67,43 @@ public class EnemyDef {
     }
 
     //-----Methods
+    /**
+     * Creates a body definition for the enemy.
+     * @return A new BodyDef
+     */
+    private BodyDef createBodyDef() {
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.DynamicBody;
+        return bd;
+    }
 
+    /**
+     * Creates a fixture definition for the enemy.
+     * @param enemyJSON A wrapper containing parsed enemy JSON data
+     * @return A new FixtureDef
+     */
+    private FixtureDef createFixtureDef(EnemyLoader.EnemyJSON enemyJSON) {
+        FixtureDef fd  = new FixtureDef();
+        fd.friction = FRICTION;
+        fd.density = enemyJSON.density;
+        fd.restitution = enemyJSON.restitution;
+        fd.filter.categoryBits = CATE_BITS;
+        fd.filter.maskBits = MASK_BITS;
+        return fd;
+    }
     //-----Getters and Setters
+
+    @Override
+    public String toString() {
+        String s = name;
+        s += "\n\tMax Velocity: " + max_velocity;
+        s += "\n\tHealth: " + health;
+        s += "\n\tisBoss: " + isBoss;
+        s += "\n\tBodyDef: " + body_def.toString();
+        s += "\n\tFixtureDef: " + fixture_def.toString();
+        s += "\n\tLoader: " + loader.toString();
+        s += "\n\tWidth: " + width;
+        s += "\n\tHeight: " + height;
+        return s;
+    }
 }

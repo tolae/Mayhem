@@ -1,5 +1,5 @@
 buildscript {
-    
+
 
     repositories {
         mavenLocal()
@@ -11,10 +11,8 @@ buildscript {
     }
     dependencies {
         classpath 'org.wisepersist:gwt-gradle-plugin:1.0.6'
-        classpath 'com.android.tools.build:gradle:3.1.4'
+        classpath 'com.android.tools.build:gradle:3.4.0'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.3'
-        
-
     }
 }
 
@@ -25,7 +23,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Mayhem"
-        gdxVersion = '1.9.8'
+        gdxVersion = '1.9.9'
         roboVMVersion = '2.3.3'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -51,7 +49,7 @@ project(":desktop") {
         implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
-        
+
     }
 }
 
@@ -75,7 +73,7 @@ project(":android") {
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86"
         natives "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-x86_64"
         implementation "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
-        
+
     }
 }
 
@@ -91,7 +89,7 @@ project(":ios") {
         implementation "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
         implementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
-        
+
     }
 }
 
@@ -111,7 +109,7 @@ project(":html") {
         implementation "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4:sources"
         implementation "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.4:sources"
         implementation "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4:sources"
-        
+
     }
 }
 
@@ -125,7 +123,7 @@ project(":core") {
         implementation "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
         implementation "net.dermetfan.libgdx-utils:libgdx-utils-box2d:0.13.4"
         implementation "net.dermetfan.libgdx-utils:libgdx-utils:0.13.4"
-        
+        implementation "com.google.code.gson:gson:2.8.5"
     }
 }
 

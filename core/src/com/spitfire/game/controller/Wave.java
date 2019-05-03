@@ -1,33 +1,36 @@
 package com.spitfire.game.controller;
 
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 
 public class Wave {
 
     //-----Fields
     private int max_formation_count; //The total number of expected formations
-    private Formation[] formations; //The formation descriptions in the wave
+    private List<Formation> formations; //The formation descriptions in the wave
     private Iterator<Formation> current_formation; //A pointer to the current formation
     //-----Constructors
-    public Wave(int formation_count) {
+    Wave(int formation_count) {
         max_formation_count = formation_count;
-        formations = new Formation[formation_count];
-        current_formation = Arrays.asList(formations).iterator();
+        formations = new ArrayList<Formation>();
+        current_formation = null;
     }
     //-----Methods
-    //-----Getters and Setters
-    int getMaxFormationCount() { return max_formation_count; }
-
-    Formation getFormation(int index) {
-        return formations[index];
+    void reset() {
+        current_formation = formations.iterator();
     }
 
-    void setFormation(Formation formations, int index) {
-        this.formations[index] = formations;
+    //-----Getters and Setters
+    void addFormation(Formation formations) {
+        this.formations.add(formations);
     }
 
     Formation getNextFormation() {
-        return current_formation.next();
+        if (current_formation == null)
+            current_formation = formations.iterator();
+        return current_formation.hasNext() ? current_formation.next() : null;
     }
 }

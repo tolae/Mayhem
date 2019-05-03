@@ -1,12 +1,8 @@
-#Enemy Name
-enemy_xxxx
-#Enemy velocity
-20
-#Enemy health
-100
-#Enemy boss
-true
-#Enemy Density
-0.01
-#Enemy Restitution (bounciness)
-1
+{
+    "name"          : "enemy_xxxx",
+    "velocity"      : 20,
+    "health"        : 100,
+    "boss"          : true,
+    "density"       : 0.01,
+    "restitution"   : 1
+}

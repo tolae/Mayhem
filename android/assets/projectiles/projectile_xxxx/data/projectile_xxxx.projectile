@@ -1,12 +1,8 @@
-#Projectile Name
-projectile_xxxx
-#Projectile Velocity
-200
-#Projectile Damage
-10
-#Projectile Bounces
-3
-#Projectile Density
-1
-#Projectile Restitution (bounciness)
-0
+{
+    "name"          : "projectile_xxxx",
+    "velocity"      : "200",
+    "damage"        : 10,
+    "bounces"       : 3,
+    "density"       : 1,
+    "restitution"   : 0
+}

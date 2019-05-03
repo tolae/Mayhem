@@ -1,12 +1,20 @@
 package com.spitfire.game.controller;
 
-import com.spitfire.game.controller.EnumManager.FormationStyle;
 import com.spitfire.game.model.Position;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Formation {
+
+    /**
+     * Describes the style in which the enemies will appear in a particular wave
+     */
+    public enum FormationStyle {
+        NONE,
+        LINE_1,
+    }
 
     //-----Fields
     private FormationStyle formation_style; //How the units are organized
@@ -14,12 +22,37 @@ public class Formation {
     private final String[] names; //Names of the enemies in said formation
 
     //-----Constructors
-    public Formation(int formation_count) {
-        names = new String[formation_count];
+    Formation(int formation_count, String[] name_list, String style) throws IllegalFormationException {
         size = formation_count;
-        formation_style = FormationStyle.NONE;
+        formation_style = FormationStyle.valueOf(style.toUpperCase());
+        names = createNameArray(name_list);
     }
     //-----Methods
+
+    /**
+     * Creates a new name array with the given list of names with the
+     * appropriate size.
+     * @param n The given list of names.
+     * @return A list of names matching the style (None returns null)
+     */
+    private String[] createNameArray(String[] n) throws IllegalFormationException {
+        String[] names = null;
+        try {
+            switch (formation_style) {
+                case NONE:
+                    break;
+                case LINE_1:
+                    names = new String[size];
+                    Arrays.fill(names, n[0]);
+                    break;
+                default:
+                    throw new IllegalFormationException(this);
+            }
+        } catch (IndexOutOfBoundsException e) {
+            // This is okay
+        }
+        return names;
+    }
 
     /**
      * Creates a formation based on the formations information.
@@ -27,9 +60,10 @@ public class Formation {
      */
     public List<Position> createFormation() {
         List<Position> positions = new ArrayList<Position>();
-        if (formation_style == FormationStyle.NONE) return positions;
+        if (formation_style == FormationStyle.NONE) return null;
 
         switch (formation_style) {
+            // TODO: Create a factory for formation styles (new class)
             case LINE_1:
                 int current_size = 0;
                 for (int y_counter = -2; y_counter < size-2;) {
@@ -52,16 +86,23 @@ public class Formation {
 
         return positions;
     }
+
+    @Override
+    public String toString() {
+        return "Style: " + formation_style.toString() + "\n" +
+        "Name List: " + Arrays.toString(names) + " (" + size + ")";
+    }
     //-----Getters and Setters
-    void setFormationStyle(EnumManager.FormationStyle formation_style) {
-        this.formation_style = formation_style;
-    }
+    //-----Inner/Anonymous Classes
+    public class IllegalFormationException extends Exception {
+        Formation formation;
+        IllegalFormationException(Formation bad_formation) {
+            formation = bad_formation;
+        }
 
-    protected int getSize() {
-        return size;
-    }
-
-    void setName(String name, int index) {
-        this.names[index] = name;
+        public String toString() {
+            return "IllegalFormationException: Invalid formation given " +
+                    " " + formation.toString();
+        }
     }
 }

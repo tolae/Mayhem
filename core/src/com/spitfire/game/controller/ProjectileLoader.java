@@ -10,6 +10,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.utils.Array;
+import com.google.gson.Gson;
+import com.google.gson.stream.JsonReader;
 import com.spitfire.game.misc.BodyEditorLoader;
 import com.spitfire.game.model.ProjectileDef;
 import com.spitfire.game.controller.EnumManager.EntityType;
@@ -20,25 +22,6 @@ public class ProjectileLoader extends
 		AsynchronousAssetLoader<ProjectileDef, ProjectileLoader.ProjectileParameters> {
 
 	//-----Fields
-	private static final String PROJECTILE_ASSET_PATH = 
-        "android/assets/data/projectiles/";
-	/*File parsing line constants*/
-	private static final int PROJECTILE_NAME = 0;
-	private static final int PROJECTILE_VELOCITY = 1;
-	private static final int PROJECTILE_DAMAGE = 2;
-	private static final int PROJECTILE_BOUNCES = 3;
-	private static final int PROJECTILE_DENSITY = 4;
-	private static final int PROJECTILE_RESTITUTION = 5;
-	/*Projectile Constants*/
-    //Identifies what this object is
-    private static final short CATE_BITS = EntityType.getVal(EntityType.PROJECTILE);
-    //Identifies what this object collides with
-    private static final short MASK_BITS = 
-        (short)(EntityType.getVal(EntityType.ENEMY) |
-				EntityType.getVal(EntityType.WALL) |
-				EntityType.getVal(EntityType.BOUND));
-    //Box2D object friction
-	private static final float FRICTION = 0;
 	/*Actual ProjectileDef to save*/
 	ProjectileDef projectile_def;
 	//-----Constructors
@@ -47,7 +30,7 @@ public class ProjectileLoader extends
 	}
 	//-----Methods
 	@Override
-    public void loadAsync(AssetManager manager, String file_name, 
+    public void loadAsync(AssetManager manager, String file_name,
         FileHandle file, ProjectileParameters param) {
         projectile_def =  null;
         projectile_def = createProjectileDef(file);
@@ -70,52 +53,16 @@ public class ProjectileLoader extends
     private ProjectileDef createProjectileDef(FileHandle file) {
     	ProjectileDef pd = null;
     	try {
-    		BufferedReader reader = file.reader((int)file.length());
+			FileHandle other = Gdx.files.internal(file.path());
+			JsonReader reader =
+					new JsonReader(new BufferedReader(other.reader()));
+			Gson g = new Gson();
+			ProjectileJSON projectileJson = g.fromJson(reader,
+					ProjectileJSON.class);
 
-    		String line;
-    		int line_count = 0;
-
-    		String n = "";
-    		int v = 0;
-    		int b = 0;
-    		int d = 0;
-    		BodyDef bd = new BodyDef();
-    		FixtureDef fd = new FixtureDef();
-    		while ((line = reader.readLine()) != null) {
-    			if (line.startsWith("#")) continue;
-
-    			switch (line_count) {
-    				case PROJECTILE_NAME:
-    					n = line;
-    					break;
-    				case PROJECTILE_VELOCITY:
-    					v = Integer.parseInt(line);
-    					break;
-    				case PROJECTILE_BOUNCES:
-    					b = Integer.parseInt(line);
-    					break;
-    				case PROJECTILE_DENSITY:
-    					fd.density = Float.parseFloat(line);
-    					break;
-    				case PROJECTILE_RESTITUTION:
-    					fd.restitution = Float.parseFloat(line);
-    					break;
-                    case PROJECTILE_DAMAGE:
-                        d = Integer.parseInt(line);
-                        break;
-    				default:
-    					break;
-    			}
-
-    			line_count++;
-    		}
-
-    		BodyEditorLoader bel = new BodyEditorLoader(Gdx.files.internal(file.pathWithoutExtension().concat(".json")));
-    		bd.type = BodyDef.BodyType.DynamicBody;
-    		fd.friction = FRICTION;
-    		fd.filter.categoryBits = CATE_BITS;
-    		fd.filter.maskBits = MASK_BITS;
-    		pd = new ProjectileDef(n, v, b, d, bd, fd, bel);
+			BodyEditorLoader body_info =
+					new BodyEditorLoader(Gdx.files.internal(file.pathWithoutExtension().concat(".json")));
+    		pd = new ProjectileDef(projectileJson, body_info);
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
@@ -124,6 +71,15 @@ public class ProjectileLoader extends
     }
     //-----Getters and Setters
     //-----Inner/Anonymous Classes
-    static public class ProjectileParameters extends
+    static class ProjectileParameters extends
 			AssetLoaderParameters<ProjectileDef> {}
+
+	public static class ProjectileJSON {
+		public String name;
+		public int velocity;
+		public int damage;
+		public int bounces;
+		public int density;
+		public int restitution;
+	}
 }

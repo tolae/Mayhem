@@ -5,13 +5,6 @@ package com.spitfire.game.controller;
  */
 public class EnumManager {
     /**
-     * Describes the style in which the enemies will appear in a particular wave
-     */
-    public enum FormationStyle {
-        NONE,
-        LINE_1,
-    }
-    /**
      * Describes what kind of entity is being used
      */
     public enum EntityType {

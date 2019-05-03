@@ -3,7 +3,8 @@ package com.spitfire.game.model;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.Shape;
+import com.spitfire.game.controller.EnumManager;
+import com.spitfire.game.controller.ProjectileLoader;
 import com.spitfire.game.misc.BodyEditorLoader;
 
 /**
@@ -13,6 +14,17 @@ import com.spitfire.game.misc.BodyEditorLoader;
 public class ProjectileDef {
 
     //-----Fields
+    /*Projectile Constants*/
+    //Identifies what this object is
+    private static final short CATE_BITS = EnumManager.EntityType.getVal(EnumManager.EntityType.PROJECTILE);
+    //Identifies what this object collides with
+    private static final short MASK_BITS =
+            (short)(EnumManager.EntityType.getVal(EnumManager.EntityType.ENEMY) |
+                    EnumManager.EntityType.getVal(EnumManager.EntityType.WALL) |
+                    EnumManager.EntityType.getVal(EnumManager.EntityType.BOUND));
+    //Box2D object friction
+    private static final float FRICTION = 0;
+
     final String name; //The name of the projectile
     final int max_velocity; //The top velocity a projectile to get to.
     final int max_bounces; //The total amount of bounces the projectile has in its life time.
@@ -24,36 +36,64 @@ public class ProjectileDef {
     int width, height; //The projectiles texture width and height
 
     //-----Constructors
+
     /**
      * Base constructor for the projectile definition.
-     * @param n name: The name of the projectile
-     * @param mv max_velocity: The top velocity a projectile to get to
-     * @param mb max_bounces: The total amount of bounces the projectile has in its life time
-     * @param bd body_def: The internal information for a Box2D body
-     * @param fd fixture_def: The internal information for a Box2D fixture
+     * @param projectileJson A wrapper containing parsed projectile JSON data
+     * @param body_info A loader used to create the physics body
      */
-    public ProjectileDef(String n, int mv, int mb, int damage, BodyDef bd, FixtureDef fd, BodyEditorLoader bel) {
-        name = n;
-        max_velocity = mv;
-        max_bounces = mb;
-        this.damage = damage;
-        body_def = bd;
-        fixture_def = fd;
-        loader = bel;
+    public ProjectileDef(ProjectileLoader.ProjectileJSON projectileJson,
+                         BodyEditorLoader body_info) {
+        name = projectileJson.name;
+        max_velocity = projectileJson.velocity;
+        max_bounces = projectileJson.bounces;
+        damage = projectileJson.damage;
+        body_def = createBodyDef();
+        fixture_def = createFixtureDef(projectileJson);
+        loader = body_info;
     }
 
     /**
      * Copy constructor.
-     * @param pd projectile_def: The projectile definition
+     * @param pd projectile_def The projectile definition
      */
     public ProjectileDef(ProjectileDef pd) {
-        this(pd.name, pd.max_velocity, pd.max_bounces, pd.damage, pd.body_def, pd.fixture_def, pd.loader);
+        name = pd.name;
+        max_velocity = pd.max_velocity;
+        max_bounces = pd.max_bounces;
+        damage = pd.damage;
+        body_def = pd.body_def;
+        fixture_def = pd.fixture_def;
+        loader = pd.loader;
 
         this.width = pd.width;
         this.height = pd.height;
     }
     //-----Methods
+    /**
+     * Creates a body definition for the enemy.
+     * @return A new BodyDef
+     */
+    private BodyDef createBodyDef() {
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.DynamicBody;
+        return bd;
+    }
 
+    /**
+     * Creates a fixture definition for the projectile.
+     * @param projectileJson A wrapper containing parsed projectile JSON data
+     * @return A new FixtureDef
+     */
+    private FixtureDef createFixtureDef(ProjectileLoader.ProjectileJSON projectileJson) {
+        FixtureDef fd  = new FixtureDef();
+        fd.friction = FRICTION;
+        fd.density = projectileJson.density;
+        fd.restitution = projectileJson.restitution;
+        fd.filter.categoryBits = CATE_BITS;
+        fd.filter.maskBits = MASK_BITS;
+        return fd;
+    }
     //-----Getters and Setters
     public void setPosition(float x_pos, float y_pos) {
         this.body_def.position.set(x_pos, y_pos);
